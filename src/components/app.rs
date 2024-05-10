@@ -1,4 +1,5 @@
 use leptos::*;
+use wasm_bindgen::prelude::*;
 
 use super::analysis::Analysis;
 use super::examples::{ExampleProgramDescription, SelectExampleProgram};
@@ -7,6 +8,11 @@ use super::parser::ParseError;
 
 use crate::function::Runner;
 use crate::util;
+
+#[wasm_bindgen(module = "/src/assets/js/fireworks.js")]
+extern "C" {
+    fn start_fireworks();
+}
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -32,6 +38,7 @@ pub fn App() -> impl IntoView {
         match runner.run() {
             Ok(_) => {
                 set_run_result.set(Some(Ok("Program success".to_string())));
+                start_fireworks();
                 merkle::reload_graph(program);
             }
             Err(error) => {
@@ -42,6 +49,7 @@ pub fn App() -> impl IntoView {
 
     view! {
         <div class="input-page">
+            <div class="fireworks"></div>
             <div class="page-header">
                 <img class="header-icon" src="/images/simplicity_logo.svg" />
             </div>
